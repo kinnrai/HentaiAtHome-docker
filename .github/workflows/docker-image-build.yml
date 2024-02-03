@@ -1,13 +1,11 @@
 name: Docker Image CI
 
-# Trigger workflow on push, pr and release events
+# Trigger workflow on push and pr events
 on:
   push:
     branches: [master]
   pull_request:
     branches: [master]
-  release:
-    types: [created, published]
 
 jobs:
   push_to_registry:
@@ -37,6 +35,9 @@ jobs:
       - name: Build and push Docker images
         uses: docker/build-push-action@v5.1.0
         with:
+          build-args: |
+            HatH_VERSION=${{ vars.HatH_VERSION }}
+            HatH_SHA256=${{ vars.HatH_SHA256 }}
           context: .
           # Generate multi-platform images,see https://github.com/docker-library/bashbrew/blob/v0.1.11/architecture/oci-platform.go
           platforms: |
@@ -44,5 +45,4 @@ jobs:
             linux/arm64
           push: true
           tags: |
-            kinnrai/hath:latest
             kinnrai/hath:${{ github.ref_name }}
