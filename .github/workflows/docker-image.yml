@@ -7,6 +7,9 @@ on:
       - v*
   workflow_dispatch:
 
+env:
+  HatH_VERSION: latest
+
 jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
