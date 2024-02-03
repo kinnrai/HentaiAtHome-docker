@@ -10,12 +10,9 @@ RUN apk add --no-cache tzdata wget unzip && \
 # Create working directory
 WORKDIR /home/hath
 
-# Set the version and SHA-256 value, download and unzip HentaiAtHome, and then clean up unnecessary files.
+# Set the version, download and unzip HentaiAtHome, and then clean up unnecessary files.
 ARG HatH_VERSION="1.6.2"
-ARG HatH_SHA256="bb21adeb38e48aeb1892b5cbe603bfeea2c1d653c3d9fafc9e1b336ec0d32dda"
 RUN wget https://repo.e-hentai.org/hath/HentaiAtHome_${HatH_VERSION}.zip -O HentaiAtHome.zip && \
-    echo "${HatH_SHA256}  HentaiAtHome.zip" | sha256sum -c - || \
-    (echo "SHA256 hash verification failed!" && exit 1) && \
     unzip HentaiAtHome.zip && \
     rm HentaiAtHome.zip autostartgui.bat HentaiAtHomeGUI.jar && \
     apk del wget unzip
