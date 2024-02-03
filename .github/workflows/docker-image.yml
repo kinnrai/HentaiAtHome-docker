@@ -39,7 +39,6 @@ jobs:
       - name: Build and push Docker images
         uses: docker/build-push-action@v5.1.0
         with:
-          build-args: HatH_VERSION=${{ env.HatH_VERSION }}
           context: .
           # Generate multi-platform images,see https://github.com/docker-library/bashbrew/blob/v0.1.11/architecture/oci-platform.go
           platforms: |
