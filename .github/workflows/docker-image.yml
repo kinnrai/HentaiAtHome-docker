@@ -5,6 +5,10 @@ on:
   push:
     tags:
       - v*
+  workflow_dispatch:
+
+env:
+  HatH_VERSION: ''
 
 jobs:
   push_to_registry:
