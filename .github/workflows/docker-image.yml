@@ -1,14 +1,13 @@
 name: Docker Image CI
 
-# Trigger workflow when push tag
+# Trigger workflow on push, pr and release events
 on:
   push:
-    tags:
-      - v*
-  workflow_dispatch:
-
-env:
-  HatH_VERSION: latest
+    branches: [master]
+  pull_request:
+    branches: [master]
+  release:
+    types: [created, published]
 
 jobs:
   push_to_registry:
@@ -16,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # git checkout code
-      - name: Check
+      - name: Checkout
         uses: actions/checkout@v4.1.1
 
       # Set up QEMU, later docker buildx depends on this.
@@ -34,10 +33,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Obtain the current tag information through the git command and store it in the environment variable HatH_VERSION
-      - name: Generate HatH_VERSION
-        run: echo HatH_VERSION=`git describe --tags --always` >> $GITHUB_ENV
-
       # Build Docker and push to Docker hub
       - name: Build and push Docker images
         uses: docker/build-push-action@v5.1.0
@@ -45,12 +40,9 @@ jobs:
           context: .
           # Generate multi-platform images,see https://github.com/docker-library/bashbrew/blob/v0.1.11/architecture/oci-platform.go
           platforms: |
-            linux/386
             linux/amd64
-            linux/arm/v6
-            linux/arm/v7
-            linux/arm64/v8
+            linux/arm64
           push: true
           tags: |
             kinnrai/hath:latest
-            kinnrai/hath:${{ env.HatH_VERSION }}
+            kinnrai/hath:${{ github.ref_name }}
