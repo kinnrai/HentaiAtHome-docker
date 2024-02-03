@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  hath:
+    build: .
+    image: kinnrai/hath:latest
+    container_name: hath
+    restart: always
+    ports:
+      # According to your client's settings page(https://e-hentai.org/hentaiathome.php)
+      - "443:443"
+    environment:
+      # Your timezone
+      - TZ=YOUR_TIMEZONE
+      # Your client's ID and key
+      - CLIENT_ID=YOUR_CLIENT_ID
+      - CLIENT_KEY=YOUR_CLIENT_KEY
+    volumes:
+      - ./cache:/home/hath/cache
+      - ./data:/home/hath/data
+      - ./download:/home/hath/download
+      - ./log:/home/hath/log
+      - ./temp:/home/hath/temp
